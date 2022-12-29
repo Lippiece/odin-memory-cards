@@ -1,20 +1,21 @@
 import "./css/App.css";
+
+import CssBaseline from "@mui/material/CssBaseline";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useState } from "react";
+
 import GameScreen from "./components/GameScreen";
 import MainMenu from "./components/MainMenu";
-import { useState } from "react";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-
 
 const theme = createTheme( {
   palette: {
+    mode: "dark",
     primary: {
       main: "#ff7231",
     },
     secondary: {
       main: "#35ff90",
     },
-    mode: "dark",
   },
   typography: {
     fontFamily: [
@@ -25,18 +26,32 @@ const theme = createTheme( {
 } );
 
 const App = () => {
-  const [ cards, setCards ] = useState( [] );
+
+  const [
+    cards,
+    setCards,
+  ] = useState( [] );
+  const [
+    clicked,
+    setClicked,
+  ] = useState( [] );
   return (
-    <ThemeProvider theme={ theme }>
+    <ThemeProvider
+      theme={ theme }>
       <CssBaseline />
-      <div className="App">
+      <div
+        className="App">
         <MainMenu />
         <GameScreen
           cards={ cards }
+          setCards={ setCards }
+          clicked={ clicked }
+          setClicked={ setClicked }
         />
       </div>
     </ThemeProvider>
   );
+
 };
 
 export default App;
