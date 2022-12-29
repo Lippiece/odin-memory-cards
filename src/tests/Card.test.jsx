@@ -8,7 +8,6 @@ import {
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
-  beforeEach,
   describe,
   expect,
   it,
@@ -21,7 +20,6 @@ const setup = () =>
     card={ {
       image: "https://via.placeholder.com/150",
       title: "Card Title",
-      text: "Card Text",
     } }
   /> );
 
@@ -29,6 +27,17 @@ describe( "Card", () => {
 
   it( "renders", () => {
     setup();
-    expect( screen.getByTestId( "card" ) ).toBeTruthy();
+    expect( screen.getByTestId( "card" ) ).toBeDefined();
   } );
+
+  it( "renders the image", () => {
+    setup();
+    expect( screen.getByAltText( "card" ) ).toBeDefined();
+  } );
+
+  it( "renders the title", () => {
+    setup();
+    expect( screen.getByText( "Card Title" ) ).toBeDefined();
+  } );
+
 } );

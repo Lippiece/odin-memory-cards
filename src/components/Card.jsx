@@ -1,4 +1,7 @@
-const Card = ( { card } ) =>
+const Card = ( {
+  card,
+  setClicked,
+} ) =>
 (
   <div
     className="card"
@@ -6,7 +9,7 @@ const Card = ( { card } ) =>
     <div
       className="card-image">
       <img
-        alt=""
+        alt="card"
         src={ card.image } />
     </div>
     <div
@@ -15,10 +18,6 @@ const Card = ( { card } ) =>
         className="card-title">
         { card.title }
       </h2>
-      <p
-        className="card-text">
-        { card.text }
-      </p>
     </div>
   </div>
 );
