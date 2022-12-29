@@ -23,5 +23,6 @@
     "moduleDetection": "auto",
     "noImplicitAny": true,
     "incremental": true,
+    "allowSyntheticDefaultImports": true
   }
 }

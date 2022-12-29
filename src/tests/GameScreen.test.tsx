@@ -41,18 +41,18 @@ describe("GameScreen", () => {
     expect(screen.getByTestId("game-screen")).toBeDefined();
   });
 
-  // it("renders all the cards", () => {
-  //   const cardsLength = setup();
+  it("renders all the cards", () => {
+    const cardsLength = setup();
 
-  //   expect(screen.getAllByTestId("card")).toHaveLength(cardsLength);
-  // });
+    expect(screen.getAllByTestId("card")).toHaveLength(cardsLength);
+  });
 
-  // it("should render cards shuffled", async () => {
-  //   setup();
-  //   const cards = screen.getAllByTestId("card");
-  //   userEvent.click(cards[0]);
-  //   await waitFor(() => {
-  //     expect(screen.getAllByTestId("card")).not.toEqual(cards);
-  //   });
-  // });
+  it("should render cards shuffled", async () => {
+    setup();
+    const cards = screen.getAllByTestId("card");
+    userEvent.click(cards[0]);
+    await waitFor(() => {
+      expect(screen.getAllByTestId("card")).not.toEqual(cards);
+    });
+  });
 });

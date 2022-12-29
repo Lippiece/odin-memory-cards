@@ -7,7 +7,7 @@ import { useState } from "react";
 import GameScreen from "./components/GameScreen";
 import MainMenu from "./components/MainMenu";
 
-const theme = createTheme( {
+const theme = createTheme({
   palette: {
     mode: "dark",
     primary: {
@@ -18,40 +18,43 @@ const theme = createTheme( {
     },
   },
   typography: {
-    fontFamily: [
-      "Rubik",
-      "sans-serif",
-    ].join( "," ),
+    fontFamily: ["Rubik", "sans-serif"].join(","),
   },
-} );
+});
+const source = "https://picsum.photos/200/300";
 
+const cards = [
+  {
+    id: 1,
+    image: source,
+  },
+  {
+    id: 2,
+    image: source,
+  },
+  {
+    id: 3,
+    image: source,
+  },
+  {
+    id: 4,
+    image: source,
+  },
+  {
+    id: 5,
+    image: source,
+  },
+];
 const App = () => {
-
-  const [
-    cards,
-    setCards,
-  ] = useState( [] );
-  const [
-    clicked,
-    setClicked,
-  ] = useState( [] );
   return (
-    <ThemeProvider
-      theme={ theme }>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div
-        className="App">
+      <div className="App">
         <MainMenu />
-        <GameScreen
-          inputCards={ cards }
-          setCards={ setCards }
-          clicked={ clicked }
-          setClicked={ setClicked }
-        />
+        <GameScreen inputCards={cards} />
       </div>
     </ThemeProvider>
   );
-
 };
 
 export default App;
