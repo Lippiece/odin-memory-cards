@@ -7,16 +7,9 @@
     "src/**/*"
   ],
   "compilerOptions": {
-    "allowJs": true,
     "alwaysStrict": true,
-    "checkJs": true,
     "jsx": "react-jsx",
     "watch": true,
-    "watchFile": "dynamicPriorityPolling",
-    "watchDirectory": "dynamicPriorityPolling",
-    "types": [
-      "node",
-    ],
     "target": "ESNext",
     "strictFunctionTypes": true,
     "strict": true,
@@ -26,6 +19,8 @@
     "noUnusedLocals": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
+    "moduleResolution": "Node",
+    "moduleDetection": "auto",
     "noImplicitAny": true,
     "incremental": true,
   }

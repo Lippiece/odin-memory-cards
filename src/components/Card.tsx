@@ -1,22 +1,27 @@
 import Button from "@mui/material/Button";
 import { pipe } from "sanctuary";
 
-import setClicked from "../logic/setClicked";
+import CardType from "../@types/Card";
 import shuffleArray from "../logic/shuffleArray";
 
-const Card = ( {
-  card,
-  cards,
-  setCards,
-  renderCards,
-} ) => {
-
-  const handleClick = () =>
-    pipe( [
-      shuffleArray,
-      setClicked,
-      setCards,
-    ] )( cards );
+interface CardProps {
+  card: CardType;
+  cards: CardType[];
+  setCards: (cards: CardType[]) => void;
+}
+const Card: React.FC<CardProps> = ({ card, cards, setCards }) => {
+  const setClicked = (cards_: CardType[]) => {
+    return cards_.map(card_ => {
+      if (card_.id === card.id) {
+        return {
+          ...card_,
+          clicked: true,
+        };
+      }
+      return card_;
+    });
+  };
+  const handleClick = () => pipe([shuffleArray, setClicked, setCards])(cards);
 
   return (
     <Button
@@ -24,21 +29,13 @@ const Card = ( {
       data-testid="card"
       onClick={handleClick}
     >
-      <div
-        className="card-image">
+      <div className="card-image">
         <img
           alt="card"
-          src={card.image} />
+          src={card.image}
+        />
       </div>
-      <div
-        className="card-content">
-        <h2
-          className="card-title">
-          {card.title}
-        </h2>
-      </div>
-    </Button> );
-
+    </Button>
+  );
 };
-
 export default Card;

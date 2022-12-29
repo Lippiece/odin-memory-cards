@@ -13,7 +13,9 @@ const MainMenu = () => {
     setDifficulty,
   ] = useState( "easy" );
 
-  const handleDifficultyChange = event => {
+  const handleDifficultyChange = (
+    event: React.ChangeEvent<{ value: string; }>
+  ) => {
 
     setDifficulty( event.target.value );
 

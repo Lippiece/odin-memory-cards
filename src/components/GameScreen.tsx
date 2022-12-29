@@ -1,52 +1,36 @@
 import { useEffect, useState } from "react";
 
+import CardType from "../@types/Card";
 import shuffleArray from "../logic/shuffleArray";
 import Card from "./Card";
 
-const GameScreen = ( {
-  cards: globalCards,
-} ) => {
+type GameScreenProps = {
+  inputCards: CardType[];
+}
 
-  const [
-    cards,
-    setCards,
-  ] = useState( [] );
+const GameScreen: React.FC<GameScreenProps> = ({ inputCards }) => {
+  const [ cards, setCards ] = useState<CardType[]>([]);
 
-  useEffect(
-    () => {
-
-      setCards( shuffleArray( globalCards ) );
-
-      return [];
-
-    },
-    [
-      cards,
-      globalCards,
-    ]
-  );
-
-  const renderCards = () =>
-    shuffleArray( cards )
-      .map( card =>
-      (
-        <Card
-          card={ card }
-          key={ card.id }
-          cards={ cards }
-          setCards={ setCards }
-        />
-      ) );
+  useEffect(() => {
+    setCards(shuffleArray(inputCards));
+  }, [ inputCards ]);
 
   return (
     <div
       className="cards"
       data-testid="game-screen"
     >
-      { cards }
+      {shuffleArray(cards).map((card:CardType) =>
+        (
+          <Card
+            card={card}
+            key={card.id}
+            cards={cards}
+            setCards={setCards}
+          />
+        ))}
     </div>
   );
-
 };
 
 export default GameScreen;

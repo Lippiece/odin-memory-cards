@@ -1,108 +1,50 @@
 /* eslint-disable fp/no-unused-expression */
 /* eslint-disable fp/no-nil */
-import {
-  render,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {
-  describe,
-  expect,
-  it,
-} from "vitest";
+import { describe, expect, it } from "vitest";
 
 import MainMenu from "../components/MainMenu";
 
-const setup = () =>
-  render( <MainMenu /> );
+const setup = () => render(<MainMenu />);
 
-describe(
-  "MainMenu component",
-  () => {
+describe("MainMenu component", () => {
+  it("should render the component", () => {
+    setup();
 
-    it(
-      "should render the component",
-      () => {
+    expect(screen.getByText("Main Menu")).toBeDefined();
 
-        setup();
+    expect(screen.getByText("Start Game")).toBeDefined();
+  });
 
-        expect( screen.getByText( "Main Menu" ) )
-          .toBeDefined();
+  it("should display all options when the select is clicked", async () => {
+    setup();
 
-        expect( screen.getByText( "Start Game" ) )
-          .toBeDefined();
+    userEvent.click(screen.getByText("Easy"));
+    await waitFor(() => {
+      expect(screen.getAllByText("Easy")).toBeDefined();
+    });
+    await waitFor(() => {
+      expect(screen.getAllByText("Medium")).toBeDefined();
+    });
+    await waitFor(() => {
+      expect(screen.getAllByText("Hard")).toBeDefined();
+    });
+  });
 
-      }
-    );
+  it("should display the selected option when the select is clicked", async () => {
+    setup();
 
-    it(
-      "should render the difficulty select",
-      () => {
+    const selectElement = screen.getByText("Easy");
 
-        setup();
+    userEvent.click(selectElement);
+    await waitFor(() => {
+      expect(screen.getByText("Medium")).toBeDefined();
+    });
 
-        // Find the select element;
-        const selectElement = screen.getByText( "Difficulty" );
-
-      }
-    );
-
-    it(
-      "should display all options when the select is clicked",
-      async () => {
-
-        setup();
-
-        userEvent.click( screen.getByText( "Easy" ) );
-        await waitFor( () => {
-
-          expect( screen.getAllByText( "Easy" ) )
-            .toBeDefined();
-
-        } );
-        await waitFor( () => {
-
-          expect( screen.getAllByText( "Medium" ) )
-            .toBeDefined();
-
-        } );
-        await waitFor( () => {
-
-          expect( screen.getAllByText( "Hard" ) )
-            .toBeDefined();
-
-        } );
-
-      }
-    );
-
-    it(
-      "should display the selected option when the select is clicked",
-      async () => {
-
-        setup();
-
-        const selectElement = screen.getByText( "Easy" );
-
-        userEvent.click( selectElement );
-        await waitFor( () => {
-
-          expect( screen.getByText( "Medium" ) )
-            .toBeDefined();
-
-        } );
-
-        userEvent.click( screen.getByText( "Medium" ) );
-        await waitFor( () => {
-
-          expect( screen.getByText( "Medium" ) )
-            .toBeDefined();
-
-        } );
-
-      }
-    );
-
-  }
-);
+    userEvent.click(screen.getByText("Medium"));
+    await waitFor(() => {
+      expect(screen.getByText("Medium")).toBeDefined();
+    });
+  });
+});

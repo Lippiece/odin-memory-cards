@@ -43,7 +43,7 @@ const App = () => {
         className="App">
         <MainMenu />
         <GameScreen
-          cards={ cards }
+          inputCards={ cards }
           setCards={ setCards }
           clicked={ clicked }
           setClicked={ setClicked }
