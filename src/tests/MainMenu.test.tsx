@@ -1,15 +1,12 @@
 /* eslint-disable fp/no-unused-expression */
 /* eslint-disable fp/no-nil */
 import {
-  act,
-  findByText,
   render,
   screen,
   waitFor,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
-  beforeEach,
   describe,
   expect,
   it,
