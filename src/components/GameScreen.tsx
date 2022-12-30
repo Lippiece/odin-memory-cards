@@ -6,9 +6,15 @@ import Card from "./Card";
 
 type GameScreenProps = {
   inputCards: CardType[];
+  score: number;
+  setScore: (score: number) => void;
 }
 
-const GameScreen: React.FC<GameScreenProps> = ({ inputCards }) => {
+const GameScreen: React.FC<GameScreenProps> = ( {
+  inputCards,
+  score,
+  setScore,
+} ) => {
   const [ cards, setCards ] = useState<CardType[]>([]);
 
   useEffect(() => {
@@ -27,6 +33,8 @@ const GameScreen: React.FC<GameScreenProps> = ({ inputCards }) => {
             key={card.id}
             cards={cards}
             setCards={setCards}
+            onClick={() =>
+              setScore(score + 1)}
           />
         ))}
     </div>

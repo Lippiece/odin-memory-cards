@@ -2,10 +2,11 @@ import "./css/App.css";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import GameScreen from "./components/GameScreen";
 import MainMenu from "./components/MainMenu";
+import Scoreboard from "./components/Scoreboard";
 
 const theme = createTheme({
   palette: {
@@ -46,12 +47,21 @@ const cards = [
   },
 ];
 const App = () => {
+  const [score, setScore] = useState(0);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div className="App">
+      <div
+        className="App"
+        data-testid="app"
+      >
         <MainMenu />
-        <GameScreen inputCards={cards} />
+        <GameScreen
+          inputCards={cards}
+          score={score}
+          setScore={setScore}
+        />
+        <Scoreboard score={score} />
       </div>
     </ThemeProvider>
   );
