@@ -1,17 +1,13 @@
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
-interface StatusData {
-  status: "open" | "close" | "error";
-}
+import { CardsContext } from "../context/cardsContext";
 
-interface ScoreboardProps {
-  score: number;
-}
-const Scoreboard = ({score}: ScoreboardProps  ) => {
+const Scoreboard = () => {
   const [ status_, setStatus ] = useState<StatusData["status"]>("open"); // prettier-ignore
   const [ name_, setName ]     = useState<string>("John"); // prettier-ignore
+  const { score }              = useContext(CardsContext);
   return (
     <div
       className="scoreboard"

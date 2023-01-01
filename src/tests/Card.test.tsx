@@ -8,26 +8,13 @@ import Card from "../components/Card";
 import GameScreen from "../components/GameScreen";
 
 const setup = () =>
-  render(
-    <GameScreen
-      inputCards={[
-        {
-          id: 1,
-          image: "https://picsum.photos/200/300",
-        },
-        {
-          id: 2,
-          image: "https://picsum.photos/200/300",
-        },
-      ]}
-    />,
-  );
+  render(<GameScreen />);
 
 describe("Card", () => {
   it("renders", () => {
     setup();
     expect(screen.getByTestId("card-1")).toBeDefined();
     expect(screen.getByAltText("card-1")).toBeDefined();
-    expect(screen.getAllByTestId("card-image")).toHaveLength(2);
+    expect(screen.getAllByTestId("card-image")).toHaveLength(5);
   });
 });

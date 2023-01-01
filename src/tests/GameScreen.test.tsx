@@ -7,32 +7,7 @@ import { describe, expect, it } from "vitest";
 import GameScreen from "../components/GameScreen";
 
 const setup = () => {
-  const source = "https://picsum.photos/200/300";
-  const cards = [
-    {
-      id: 1,
-      image: source,
-    },
-    {
-      id: 2,
-      image: source,
-    },
-    {
-      id: 3,
-      image: source,
-    },
-    {
-      id: 4,
-      image: source,
-    },
-    {
-      id: 5,
-      image: source,
-    },
-  ];
-  render(<GameScreen inputCards={cards} />);
-
-  return cards.length;
+  render(<GameScreen />);
 };
 
 describe("GameScreen", () => {
@@ -42,17 +17,19 @@ describe("GameScreen", () => {
   });
 
   it("renders all the cards", () => {
-    const cardsLength = setup();
+    setup();
     const images = screen.getAllByTestId("card-image");
-    expect(images).toHaveLength(cardsLength);
+    expect(images).toHaveLength(5);
   });
 
   it("renders cards shuffled on click", async () => {
     setup();
-    const images = screen.getAllByTestId("card-image");
-    userEvent.click(images[0]);
+    const board = screen.getByTestId("game-screen");
+    const card1 = screen.getByTestId("card-1");
+    userEvent.click(card1);
     await waitFor(() => {
-      expect(screen.getAllByTestId("card-image")).not.toEqual(images);
+      const newBoard = screen.getByTestId("game-screen");
+      expect(newBoard).not.toEqual(board);
     });
   });
 });

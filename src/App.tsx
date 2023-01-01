@@ -3,6 +3,7 @@ import "./css/App.css";
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useReducer } from "react";
+import { map } from "sanctuary";
 
 import CardType from "./@types/Card";
 import GameScreen from "./components/GameScreen";
@@ -10,18 +11,35 @@ import MainMenu from "./components/MainMenu";
 import Scoreboard from "./components/Scoreboard";
 import {
   CardsContext,
-  cardsDispatchContext,
+  CardsDispatchContext,
   defaultCards,
-  useCards,
 } from "./context/cardsContext";
-import {
-  ScoreContext,
-  ScoreDispatchContext,
-  useScore,
-} from "./context/scoreContext";
 import shuffleArray from "./logic/shuffleArray";
 
-const theme        = createTheme({
+const App = () => {
+  const [ data, dispatch ] = useReducer(cardsReducer, defaultCards);
+  return (
+    <ThemeProvider
+      theme={theme}>
+      <CssBaseline />
+      <CardsContext.Provider
+        value={data}>
+        <CardsDispatchContext.Provider
+          value={dispatch}>
+          <div
+            className="App"
+            data-testid="app"
+          >
+            <MainMenu />
+            <GameScreen />
+            <Scoreboard />
+          </div>
+        </CardsDispatchContext.Provider>
+      </CardsContext.Provider>
+    </ThemeProvider>
+  );
+};
+const theme = createTheme({
   palette: {
     mode   : "dark",
     primary: {
@@ -35,13 +53,31 @@ const theme        = createTheme({
     fontFamily: [ "Rubik", "sans-serif" ].join(","),
   },
 });
-const cardsReducer = (
-  state: CardType[],
-  action: { type: string, payload: CardType[] }
-) => {
+
+interface stateType {
+  cards: CardType[];
+  score: number;
+}
+interface actionType {
+  type: string;
+  payload: CardType[];
+}
+const cardsReducer = (state: stateType, action: actionType) => {
+  const setClicked = () => {
+    return map((card: CardType) =>
+      (card.id === action.payload.id ? { ...card, clicked: true } : card)
+    )(state.cards);
+  };
   switch (action.type) {
-  case "shuffle cards": {
-    return shuffleArray(state);
+  case "clicked first time": {
+    return {
+      ...state,
+      cards: shuffleArray(setClicked()),
+      score: state.score + 1,
+    };
+  }
+  case "clicked second time": {
+    return state;
   }
   default: {
     return console.error(
@@ -49,43 +85,6 @@ const cardsReducer = (
     );
   }
   }
-};
-
-// TODO: scoreReducer
-type StatusCodes = "error" | "OK" | "won" | "lost";
-const App = () => {
-  const [ cards, dispatchCards ] = useReducer(cardsr);
-  const [ score, dispatchScore ] = useScore(0);
-  return (
-    <ThemeProvider
-      theme={theme}>
-      <CssBaseline />
-      <CardsContext.Provider
-        value={cards}>
-        <CardsDispatchContext
-          value={dispatchCards}>
-          <ScoreContext.Provider
-            value={score}>
-            <ScoreDispatchContext
-              value={dispatchScore}>
-              <div
-                className="App"
-                data-testid="app"
-              >
-                <MainMenu />
-                <GameScreen
-                  inputCards={cards}
-                  incrementScore={incrementScore}
-                />
-                <Scoreboard
-                  score={score} />
-              </div>
-            </ScoreDispatchContext>
-          </ScoreContext.Provider>
-        </CardsDispatchContext>
-      </CardsContext.Provider>
-    </ThemeProvider>
-  );
 };
 
 export default App;

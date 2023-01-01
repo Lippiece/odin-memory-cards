@@ -1,35 +1,23 @@
-import { useEffect, useState } from "react";
+import { useContext } from "react";
+import { CardsContext } from "../context/cardsContext";
 
 import CardType from "../@types/Card";
-import shuffleArray from "../logic/shuffleArray";
 import Card from "./Card";
 
-type GameScreenProps = {
-  inputCards: CardType[];
-  incrementScore: () => void;
-}
-
-const GameScreen: React.FC<GameScreenProps> = ( {
-  inputCards,
-  incrementScore
-} ) => {
-  const [ cards, setCards ] = useState<CardType[]>(shuffleArray(inputCards));
+const GameScreen = () => {
+  const data = useContext(CardsContext);
 
   return (
     <div
       className="cards"
       data-testid="game-screen"
     >
-      {shuffleArray(cards).map((card:CardType) =>
-        (
-          <Card
-            card={card}
-            key={card.id}
-            cards={cards}
-            setCards={setCards}
-            incrementScore={incrementScore}
-          />
-        ))}
+      {data.cards.map((card: CardType) => (
+        <Card
+          card={card}
+          key={card.id}
+        />
+      ))}
     </div>
   );
 };
