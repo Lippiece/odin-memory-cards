@@ -15,11 +15,7 @@ const GameScreen: React.FC<GameScreenProps> = ( {
   score,
   setScore,
 } ) => {
-  const [ cards, setCards ] = useState<CardType[]>([]);
-
-  useEffect(() => {
-    setCards(shuffleArray(inputCards));
-  }, [ inputCards ]);
+  const [ cards, setCards ] = useState<CardType[]>(shuffleArray(inputCards));
 
   return (
     <div

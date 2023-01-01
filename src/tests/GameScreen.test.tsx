@@ -47,7 +47,7 @@ describe("GameScreen", () => {
     expect(images).toHaveLength(cardsLength);
   });
 
-  it("renders cards shuffled", async () => {
+  it("renders cards shuffled on click", async () => {
     setup();
     const images = screen.getAllByTestId("card-image");
     userEvent.click(images[0]);

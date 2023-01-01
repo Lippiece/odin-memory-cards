@@ -29,6 +29,7 @@ describe("App", () => {
   it("increases the score when a card is clicked", async () => {
     setup();
     const card = screen.getByTestId("card-1");
+
     userEvent.click(card);
     await waitFor(() => {
       expect(screen.getByText("Score: 1")).toBeDefined();

@@ -1,6 +1,7 @@
 import Button from "@mui/material/Button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
+  find,
   fromMaybe,
   Just,
   map,
@@ -20,38 +21,27 @@ interface CardProps {
   setCards: (cards: CardType[]) => void;
   incrementScore: () => void;
 }
-interface CardState {
-  old: true | false | null;
-}
 const Card: React.FC<CardProps> = ({
   card,
   cards,
   setCards,
   incrementScore,
 }) => {
-  const [ old, setOld ] = useState<CardState["old"]>(null); // prettier-ignore
-  useEffect(() => {
-    const updateCards = () =>
-      pipe([
-        map((c: CardType) => (c.id === card.id ? { ...c, clicked: true } : c)),
-        shuffleArray,
-        setCards,
-      ])(cards);
-
-    if (old === false) {
-      incrementScore();
-    }
-    updateCards();
-  }, [old]);
+  const [clicked, setClicked] = useState(false);
   const handleClick = () => {
-    cards.find(c => c.id === card.id)?.clicked ? setOld(true) : setOld(false);
+    setClicked(true);
+    setCards(shuffleArray(cards));
+    incrementScore();
+  };
+  const handleSecondClick = () => {
+    console.log("second click");
   };
 
   return (
     <Button
       className="card"
       data-testid={`card-${card.id}`}
-      onClick={handleClick}
+      onClick={clicked ? handleSecondClick : handleClick}
     >
       <div className="card-image">
         <img
