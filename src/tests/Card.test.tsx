@@ -5,17 +5,29 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
 import Card from "../components/Card";
-describe("Card", () => {
-  it("renders", () => {
-    render(
-      <Card
-        card={{
+import GameScreen from "../components/GameScreen";
+
+const setup = () =>
+  render(
+    <GameScreen
+      inputCards={[
+        {
           id: 1,
           image: "https://picsum.photos/200/300",
-        }}
-      />,
-    );
+        },
+        {
+          id: 2,
+          image: "https://picsum.photos/200/300",
+        },
+      ]}
+    />,
+  );
+
+describe("Card", () => {
+  it("renders", () => {
+    setup();
     expect(screen.getByTestId("card-1")).toBeDefined();
-    expect(screen.getByAltText("card")).toBeDefined();
+    expect(screen.getByAltText("card-1")).toBeDefined();
+    expect(screen.getAllByTestId("card-image")).toHaveLength(2);
   });
 });

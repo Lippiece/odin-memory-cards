@@ -33,7 +33,7 @@ const GameScreen: React.FC<GameScreenProps> = ( {
             key={card.id}
             cards={cards}
             setCards={setCards}
-            onClick={() =>
+            incrementScore={() =>
               setScore(score + 1)}
           />
         ))}

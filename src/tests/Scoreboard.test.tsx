@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 
 import Scoreboard from "../components/Scoreboard";
 
-const setup = () => render(<Scoreboard />);
+const setup = () => render(<Scoreboard score={0} />);
 
 describe("Scoreboard", () => {
   it("renders", () => {

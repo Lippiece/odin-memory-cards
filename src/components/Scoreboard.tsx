@@ -28,9 +28,7 @@ const Scoreboard = ({score}: ScoreboardProps  ) => {
       <p
         data-testid="score"
       >
-        Score:
-        {' '}
-        {score}
+        {`Score: ${score}`}
       </p>
       <p>
         {name_}

@@ -43,16 +43,16 @@ describe("GameScreen", () => {
 
   it("renders all the cards", () => {
     const cardsLength = setup();
-    // data-testid={`card-${card.id}`}
-    expect(screen.getAllByRole("img")).toHaveLength(cardsLength);
+    const images = screen.getAllByTestId("card-image");
+    expect(images).toHaveLength(cardsLength);
   });
 
   it("renders cards shuffled", async () => {
     setup();
-    const cards = screen.getAllByRole("img");
-    userEvent.click(cards[0]);
+    const images = screen.getAllByTestId("card-image");
+    userEvent.click(images[0]);
     await waitFor(() => {
-      expect(screen.getAllByRole("img")).not.toEqual(cards);
+      expect(screen.getAllByTestId("card-image")).not.toEqual(images);
     });
   });
 });

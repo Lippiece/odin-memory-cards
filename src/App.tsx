@@ -22,7 +22,7 @@ const theme = createTheme({
     fontFamily: ["Rubik", "sans-serif"].join(","),
   },
 });
-const source = "https://picsum.photos/200/300";
+const source = "https://picsum.photos/200s/300";
 
 const cards = [
   {
