@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import {
   find,
   fromMaybe,
@@ -27,15 +27,6 @@ const Card: React.FC<CardProps> = ({
   setCards,
   incrementScore,
 }) => {
-  const [clicked, setClicked] = useState(false);
-  const handleClick = () => {
-    setClicked(true);
-    setCards(shuffleArray(cards));
-    incrementScore();
-  };
-  const handleSecondClick = () => {
-    console.log("second click");
-  };
 
   return (
     <Button
@@ -43,7 +34,8 @@ const Card: React.FC<CardProps> = ({
       data-testid={`card-${card.id}`}
       onClick={clicked ? handleSecondClick : handleClick}
     >
-      <div className="card-image">
+      <div
+        className="card-image">
         <img
           alt={`card-${card.id}`}
           src={card.image}

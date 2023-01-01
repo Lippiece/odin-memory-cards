@@ -2,15 +2,28 @@ import "./css/App.css";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useEffect, useState } from "react";
+import { useReducer } from "react";
 
+import CardType from "./@types/Card";
 import GameScreen from "./components/GameScreen";
 import MainMenu from "./components/MainMenu";
 import Scoreboard from "./components/Scoreboard";
+import {
+  CardsContext,
+  cardsDispatchContext,
+  defaultCards,
+  useCards,
+} from "./context/cardsContext";
+import {
+  ScoreContext,
+  ScoreDispatchContext,
+  useScore,
+} from "./context/scoreContext";
+import shuffleArray from "./logic/shuffleArray";
 
-const theme = createTheme({
+const theme        = createTheme({
   palette: {
-    mode: "dark",
+    mode   : "dark",
     primary: {
       main: "#ff7231",
     },
@@ -19,50 +32,58 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: ["Rubik", "sans-serif"].join(","),
+    fontFamily: [ "Rubik", "sans-serif" ].join(","),
   },
 });
-const source = "https://picsum.photos/200s/300";
+const cardsReducer = (
+  state: CardType[],
+  action: { type: string, payload: CardType[] }
+) => {
+  switch (action.type) {
+  case "shuffle cards": {
+    return shuffleArray(state);
+  }
+  default: {
+    return console.error(
+      `Unhandled action type: ${action.type} (at cardsReducer)`
+    );
+  }
+  }
+};
 
-const cards = [
-  {
-    id: 1,
-    image: source,
-  },
-  {
-    id: 2,
-    image: source,
-  },
-  {
-    id: 3,
-    image: source,
-  },
-  {
-    id: 4,
-    image: source,
-  },
-  {
-    id: 5,
-    image: source,
-  },
-];
+// TODO: scoreReducer
+type StatusCodes = "error" | "OK" | "won" | "lost";
 const App = () => {
-  const [score, setScore] = useState(0);
+  const [ cards, dispatchCards ] = useReducer(cardsr);
+  const [ score, dispatchScore ] = useScore(0);
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider
+      theme={theme}>
       <CssBaseline />
-      <div
-        className="App"
-        data-testid="app"
-      >
-        <MainMenu />
-        <GameScreen
-          inputCards={cards}
-          score={score}
-          setScore={setScore}
-        />
-        <Scoreboard score={score} />
-      </div>
+      <CardsContext.Provider
+        value={cards}>
+        <CardsDispatchContext
+          value={dispatchCards}>
+          <ScoreContext.Provider
+            value={score}>
+            <ScoreDispatchContext
+              value={dispatchScore}>
+              <div
+                className="App"
+                data-testid="app"
+              >
+                <MainMenu />
+                <GameScreen
+                  inputCards={cards}
+                  incrementScore={incrementScore}
+                />
+                <Scoreboard
+                  score={score} />
+              </div>
+            </ScoreDispatchContext>
+          </ScoreContext.Provider>
+        </CardsDispatchContext>
+      </CardsContext.Provider>
     </ThemeProvider>
   );
 };

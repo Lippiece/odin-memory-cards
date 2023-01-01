@@ -6,14 +6,12 @@ import Card from "./Card";
 
 type GameScreenProps = {
   inputCards: CardType[];
-  score: number;
-  setScore: (score: number) => void;
+  incrementScore: () => void;
 }
 
 const GameScreen: React.FC<GameScreenProps> = ( {
   inputCards,
-  score,
-  setScore,
+  incrementScore
 } ) => {
   const [ cards, setCards ] = useState<CardType[]>(shuffleArray(inputCards));
 
@@ -29,8 +27,7 @@ const GameScreen: React.FC<GameScreenProps> = ( {
             key={card.id}
             cards={cards}
             setCards={setCards}
-            incrementScore={() =>
-              setScore(score + 1)}
+            incrementScore={incrementScore}
           />
         ))}
     </div>

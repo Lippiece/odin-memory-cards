@@ -35,4 +35,15 @@ describe("App", () => {
       expect(screen.getByText("Score: 1")).toBeDefined();
     });
   });
+
+  it("doesn't increase the score when the same card is clicked twice", async () => {
+    setup();
+    const card = screen.getByTestId("card-1");
+
+    userEvent.click(card);
+    userEvent.click(card);
+    await waitFor(() => {
+      expect(screen.getByText("Score: 1")).toBeDefined();
+    });
+  });
 });
