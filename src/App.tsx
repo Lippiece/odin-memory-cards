@@ -17,22 +17,19 @@ import {
 import shuffleArray from "./logic/shuffleArray";
 
 const App = () => {
-  const [ data, dispatch ] = useReducer(cardsReducer, defaultCards);
+  const [data, dispatch] = useReducer(cardsReducer, defaultCards);
   return (
-    <ThemeProvider
-      theme={theme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
-      <CardsContext.Provider
-        value={data}>
-        <CardsDispatchContext.Provider
-          value={dispatch}>
+      <CardsContext.Provider value={data}>
+        <CardsDispatchContext.Provider value={dispatch}>
           <div
             className="App"
             data-testid="app"
           >
             <MainMenu />
-            <GameScreen />
             <Scoreboard />
+            <GameScreen />
           </div>
         </CardsDispatchContext.Provider>
       </CardsContext.Provider>
@@ -41,7 +38,7 @@ const App = () => {
 };
 const theme = createTheme({
   palette: {
-    mode   : "dark",
+    mode: "dark",
     primary: {
       main: "#ff7231",
     },
@@ -50,41 +47,46 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: [ "Rubik", "sans-serif" ].join(","),
+    fontFamily: ["Rubik", "sans-serif"].join(","),
   },
 });
 
-interface stateType {
+interface State {
   cards: CardType[];
   score: number;
+  toShow: number;
 }
-interface actionType {
+interface Action {
   type: string;
-  payload: CardType[];
+  payload: CardType | number;
 }
-const cardsReducer = (state: stateType, action: actionType) => {
-  const setClicked = () => {
-    return map((card: CardType) =>
-      (card.id === action.payload.id ? { ...card, clicked: true } : card)
+const cardsReducer = (state: State, action: Action) => {
+  const setClicked = () =>
+    map((card: CardType) =>
+      card.id === action.payload.id ? { ...card, clicked: true } : card,
     )(state.cards);
-  };
-  switch (action.type) {
-  case "clicked first time": {
-    return {
+  const actions: { [key: string]: () => State } = {
+    "clicked first time": () => ({
       ...state,
       cards: shuffleArray(setClicked()),
       score: state.score + 1,
-    };
-  }
-  case "clicked second time": {
-    return state;
-  }
-  default: {
-    return console.error(
-      `Unhandled action type: ${action.type} (at cardsReducer)`
-    );
-  }
-  }
+    }),
+    "clicked second time": () => ({
+      ...state,
+      cards: shuffleArray(setClicked()),
+      score: 0,
+    }),
+    "set difficulty": () => ({
+      ...state,
+      cards: shuffleArray(state.cards),
+      score: state.score,
+      toShow: action.payload,
+    }),
+  };
+  return (
+    actions[action.type]() ||
+    console.error(`Unhandled action type: ${action.type} (at cardsReducer)`)
+  );
 };
 
 export default App;

@@ -31,7 +31,7 @@ const Card: React.FC<CardProps> = ({ card }) => {
       onClick={clicked ? handleSecondClick : handleClick}
     >
       <div
-        className="card-image">
+className="card-image">
         <img
           alt={`card-${card.id}`}
           src={card.image}

@@ -6,7 +6,8 @@ import { describe, expect, it } from "vitest";
 
 import App from "../App";
 
-const setup = () => render(<App />);
+const setup = () =>
+render(<App />);
 
 describe("App", () => {
   it("renders", () => {
@@ -32,18 +33,69 @@ describe("App", () => {
 
     userEvent.click(card);
     await waitFor(() => {
-      expect(screen.getByText("Score: 1")).toBeDefined();
+      expect(screen.getByTestId("score").textContent).toBe("Score: 1");
     });
   });
 
-  it("doesn't increase the score when the same card is clicked twice", async () => {
+  it("increases the score when a different card is clicked", async () => {
     setup();
+    const card1 = screen.getByTestId("card-1");
+    const card2 = screen.getByTestId("card-2");
+    const score = screen.getByTestId("score");
+
+    userEvent.click(card1);
+    await waitFor(() => {
+      expect(score.textContent).toBe("Score: 1");
+    });
+    userEvent.click(card2);
+    await waitFor(() => {
+      expect(score.textContent).toBe("Score: 2");
+    });
+  });
+
+  it("resets the score on second click", async () => {
+    // Set up the app
+    setup();
+
+    // Get a reference to the score element
+    const score = screen.getByTestId("score");
+
+    // Check that the initial score is 0
+    expect(score.textContent).toBe("Score: 0");
+
+    // Get a reference to the card element
     const card = screen.getByTestId("card-1");
 
+    // Click the card
     userEvent.click(card);
-    userEvent.click(card);
+
+    // Wait for the score to update
     await waitFor(() => {
-      expect(screen.getByText("Score: 1")).toBeDefined();
+      expect(score.textContent).toBe("Score: 1");
+    });
+
+    // Click the card again
+    userEvent.click(card);
+
+    // Wait for the score to reset to 0
+    await waitFor(() => {
+      expect(score.textContent).toBe("Score: 0");
+    });
+  });
+
+  it("renders the game over screen when the score is 5", async () => {
+    // TODO
+  });
+
+  it("changes the cards number when the difficulty is changed", async () => {
+    setup();
+    const difficulty = screen.getByTestId("difficulty");
+    const cards      = screen.getAllByTestId("card-image");
+    expect(cards).toHaveLength(5);
+    userEvent.selectOptions(difficulty, "hard");
+    await waitFor(() => {
+      const newCards = screen.getAllByTestId("card-image");
+      expect(newCards).toHaveLength(10);
     });
   });
 });

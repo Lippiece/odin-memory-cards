@@ -8,6 +8,7 @@ import GameScreen from "../components/GameScreen";
 
 const setup = () => {
   render(<GameScreen />);
+  return screen.getByTestId("game-screen");
 };
 
 describe("GameScreen", () => {
@@ -23,13 +24,12 @@ describe("GameScreen", () => {
   });
 
   it("renders cards shuffled on click", async () => {
-    setup();
-    const board = screen.getByTestId("game-screen");
+    const initialCards = setup();
     const card1 = screen.getByTestId("card-1");
     userEvent.click(card1);
     await waitFor(() => {
-      const newBoard = screen.getByTestId("game-screen");
-      expect(newBoard).not.toEqual(board);
+      const newCards = screen.getByTestId("game-screen");
+      expect(newCards).not.toEqual(initialCards);
     });
   });
 });
