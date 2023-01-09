@@ -6,8 +6,7 @@ import { describe, expect, it } from "vitest";
 
 import MainMenu from "../components/MainMenu";
 
-const setup = () =>
-render(<MainMenu />);
+const setup = () => render(<MainMenu />);
 
 describe("MainMenu component", () => {
   it("should render the component", () => {
@@ -16,5 +15,12 @@ describe("MainMenu component", () => {
     expect(screen.getByText("Main Menu")).toBeDefined();
 
     expect(screen.getByText("Start Game")).toBeDefined();
+  });
+
+  it("should render the difficulty input", () => {
+    setup();
+
+    expect(screen.getByLabelText("Difficulty")).toBeDefined();
+
   });
 });

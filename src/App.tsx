@@ -64,23 +64,22 @@ const cardsReducer = (state: State, action: Action) => {
   const setClicked = () =>
     map((card: CardType) =>
       card.id === action.payload.id ? { ...card, clicked: true } : card,
-    )(state.cards);
+    )(state.toShow);
   const actions: { [key: string]: () => State } = {
     "clicked first time": () => ({
       ...state,
-      cards: shuffleArray(setClicked()),
       score: state.score + 1,
+      toShow: shuffleArray(setClicked()),
     }),
     "clicked second time": () => ({
       ...state,
-      cards: shuffleArray(setClicked()),
       score: 0,
+      toShow: shuffleArray(setClicked()),
     }),
     "set difficulty": () => ({
       ...state,
-      cards: shuffleArray(state.cards),
       score: state.score,
-      toShow: action.payload,
+      toShow: state.cards.slice(0, action.payload),
     }),
   };
   return (

@@ -6,8 +6,7 @@ import { describe, expect, it } from "vitest";
 
 import App from "../App";
 
-const setup = () =>
-render(<App />);
+const setup = () => render(<App />);
 
 describe("App", () => {
   it("renders", () => {
@@ -83,19 +82,26 @@ describe("App", () => {
     });
   });
 
-  it("renders the game over screen when the score is 5", async () => {
+  it("renders the game over screen when the score is max", async () => {
     // TODO
   });
 
   it("changes the cards number when the difficulty is changed", async () => {
     setup();
-    const difficulty = screen.getByTestId("difficulty");
-    const cards      = screen.getAllByTestId("card-image");
-    expect(cards).toHaveLength(5);
-    userEvent.selectOptions(difficulty, "hard");
+
+    const cards = screen.getByTestId("game-screen");
+    expect(cards.children.length).toBe(5);
+
+    const difficulty = screen.getByDisplayValue("5");
+    userEvent.clear(difficulty);
+    userEvent.click(difficulty);
+    userEvent.type(difficulty, "3");
     await waitFor(() => {
-      const newCards = screen.getAllByTestId("card-image");
-      expect(newCards).toHaveLength(10);
+      expect(difficulty.value).toBe("3");
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId("game-screen").children.length).toBe(3);
     });
   });
 });

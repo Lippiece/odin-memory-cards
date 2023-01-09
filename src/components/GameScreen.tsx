@@ -12,7 +12,7 @@ const GameScreen = () => {
       className="cards"
       data-testid="game-screen"
     >
-      {data.cards.map((card: CardType) => (
+      {data.toShow.map((card: CardType) => (
         <Card
           card={card}
           key={card.id}
