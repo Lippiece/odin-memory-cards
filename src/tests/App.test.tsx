@@ -83,7 +83,20 @@ describe("App", () => {
   });
 
   it("renders the game over screen when the score is max", async () => {
-    // TODO
+    setup();
+
+    userEvent.click(screen.getByTestId("card-1"));
+    userEvent.click(screen.getByTestId("card-2"));
+    userEvent.click(screen.getByTestId("card-3"));
+    userEvent.click(screen.getByTestId("card-4"));
+    userEvent.click(screen.getByTestId("card-5"));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("game-screen").getAttribute("hidden")).toBe("");
+    });
+    // await waitFor(() => {
+    //   expect(screen.getByText("Game Over")).toBeDefined();
+    // });
   });
 
   it("changes the cards number when the difficulty is changed", async () => {
