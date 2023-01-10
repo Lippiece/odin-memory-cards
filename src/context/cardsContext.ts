@@ -1,17 +1,13 @@
 import { createContext } from "react";
 
-import getRandomSize from "../logic/getRandomSize";
+import Context from "../@types/Context";
+import getCards from "../logic/getCards";
 
-const _cards = Array.from({ length: 15 }, (value, index) => 
-({
-  id   : index + 1,
-  image: `https://picsum.photos/${getRandomSize(100, 600)}`,
-}));
-
-export const defaultCards = {
-  cards : _cards,
-  score : 0,
-  toShow: _cards.slice(0, 5),
+export const defaultContext: Context = {
+  cards          : getCards(),
+  currentCards   : getCards().slice(0, 5),
+  score          : 0,
+  shownComponents: new Set([ "main menu" ]),
 };
-export const CardsContext = createContext(defaultCards);
-export const CardsDispatchContext = createContext(defaultCards);
+export const CardsContext = createContext(defaultContext);
+export const CardsDispatchContext = createContext(defaultContext);

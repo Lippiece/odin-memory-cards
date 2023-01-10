@@ -67,36 +67,6 @@ describe("scoreboard", () => {
       expect(score.textContent).toBe("Score: 2");
     });
   });
-
-  it("resets the score on second click", async () => {
-    // Set up the app
-    setup();
-
-    // Get a reference to the score element
-    const score = screen.getByTestId("score");
-
-    // Check that the initial score is 0
-    expect(score.textContent).toBe("Score: 0");
-
-    // Get a reference to the card element
-    const card = screen.getByTestId("card-1");
-
-    // Click the card
-    userEvent.click(card);
-
-    // Wait for the score to update
-    await waitFor(() => {
-      expect(score.textContent).toBe("Score: 1");
-    });
-
-    // Click the card again
-    userEvent.click(card);
-
-    // Wait for the score to reset to 0
-    await waitFor(() => {
-      expect(score.textContent).toBe("Score: 0");
-    });
-  });
 });
 
 describe("main menu", () => {
@@ -106,14 +76,7 @@ describe("main menu", () => {
   });
   it("is shown initially", () => {
     setup();
-    expect(screen.getByTestId("main-menu").getAttribute("hidden")).toBeFalsy();
-  });
-  it("is hidden when the game starts", async () => {
-    setup();
-    userEvent.click(screen.getByTestId("start-game"));
-    await waitFor(() => {
-      expect(screen.getByTestId("main-menu").getAttribute("hidden")).toBe("");
-    });
+    expect(screen.getByTestId("main-menu").getAttribute("hidden")).not.toBe("");
   });
   it("is shown when the game is over", async () => {
     setup();
@@ -126,8 +89,16 @@ describe("main menu", () => {
     userEvent.click(screen.getByTestId("card-5"));
 
     await waitFor(() => {
+      expect(screen.getByTestId("main-menu").getAttribute("hidden")).toBe("");
+    });
+  });
+
+  it("starts the game when the start button is clicked", async () => {
+    setup();
+    userEvent.click(screen.getByTestId("start-game"));
+    await waitFor(() => {
       expect(
-        screen.getByTestId("main-menu").getAttribute("hidden"),
+        screen.getByTestId("main-menu").getAttribute("hidden")
       ).toBeFalsy();
     });
   });

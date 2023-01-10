@@ -1,7 +1,7 @@
 interface CardType {
   id: number;
   image: string;
-  clicked?: boolean;
+  clicked: boolean;
 }
 
 export default CardType;

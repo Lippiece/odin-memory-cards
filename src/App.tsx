@@ -2,22 +2,19 @@ import "./css/App.css";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useReducer } from "react";
-import { map } from "sanctuary";
-
-import CardType from "./@types/Card";
+import { useEffect, useReducer } from "react";
+import appReducer from "./logic/appReducer";
 import GameScreen from "./components/GameScreen";
 import MainMenu from "./components/MainMenu";
 import Scoreboard from "./components/Scoreboard";
 import {
   CardsContext,
   CardsDispatchContext,
-  defaultCards,
+  defaultContext,
 } from "./context/cardsContext";
-import shuffleArray from "./logic/shuffleArray";
 
 const App = () => {
-  const [data, dispatch] = useReducer(cardsReducer, defaultCards);
+  const [data, dispatch] = useReducer(appReducer, defaultContext);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -50,42 +47,5 @@ const theme = createTheme({
     fontFamily: ["Rubik", "sans-serif"].join(","),
   },
 });
-
-interface State {
-  cards: CardType[];
-  score: number;
-  toShow: number;
-}
-interface Action {
-  type: string;
-  payload: CardType | number;
-}
-const cardsReducer = (state: State, action: Action) => {
-  const setClicked = () =>
-    map((card: CardType) =>
-      card.id === action.payload.id ? { ...card, clicked: true } : card,
-    )(state.toShow);
-  const actions: { [key: string]: () => State } = {
-    "clicked first time": () => ({
-      ...state,
-      score: state.score + 1,
-      toShow: shuffleArray(setClicked()),
-    }),
-    "clicked second time": () => ({
-      ...state,
-      score: 0,
-      toShow: shuffleArray(setClicked()),
-    }),
-    "set difficulty": () => ({
-      ...state,
-      score: state.score,
-      toShow: state.cards.slice(0, action.payload),
-    }),
-  };
-  return (
-    actions[action.type]() ||
-    console.error(`Unhandled action type: ${action.type} (at cardsReducer)`)
-  );
-};
 
 export default App;

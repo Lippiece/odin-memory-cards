@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import CardType from "../@types/Card";
 import { CardsDispatchContext } from "../context/cardsContext";
@@ -10,14 +10,17 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ card }) => {
   const [ clicked, setClicked ] = useState(false);
   const dispatch                = useContext(CardsDispatchContext);
-  const handleClick             = () => {
+  useEffect(() => {
+    !card.clicked && setClicked(false);
+  }, [ card ]);
+  const handleClick       = () => {
     setClicked(true);
     dispatch({
       payload: card,
       type   : "clicked first time",
     });
   };
-  const handleSecondClick       = () => {
+  const handleSecondClick = () => {
     dispatch({
       payload: card,
       type   : "clicked second time",
@@ -30,8 +33,7 @@ const Card: React.FC<CardProps> = ({ card }) => {
       data-testid={`card-${card.id}`}
       onClick={clicked ? handleSecondClick : handleClick}
     >
-      <div
-className="card-image">
+      <div className="card-image">
         <img
           alt={`card-${card.id}`}
           src={card.image}

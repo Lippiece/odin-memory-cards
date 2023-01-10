@@ -5,17 +5,15 @@ import { useContext, useState } from "react";
 import { CardsContext } from "../context/cardsContext";
 
 const Scoreboard = () => {
-  const [ status_, setStatus ] = useState<StatusData["status"]>("open"); // prettier-ignore
-  const [ name_, setName ]     = useState<string>("John"); // prettier-ignore
-  const { score }              = useContext(CardsContext);
+  const [ _name, setName ]        = useState<string>("John"); // prettier-ignore
+  const { score,shownComponents } = useContext(CardsContext);
   return (
     <div
       className="scoreboard"
       data-testid="scoreboard"
+      hidden={!shownComponents.has("scoreboard")}
     >
       <Form
-        setStatus={setStatus}
-        status_={status_}
         setName={setName}
       />
       <h1>
@@ -27,29 +25,25 @@ const Scoreboard = () => {
         {`Score: ${score}`}
       </p>
       <p>
-        {name_}
+        {_name}
       </p>
     </div>
   );
 };
 interface FormProps {
-  setStatus: (status_: StatusData["status"]) => void;
-  status_: StatusData["status"];
   setName: (name_: string) => void;
 }
-const Form = ({ setStatus, status_: status, setName }: FormProps) => {
+const Form = ({ setName }: FormProps) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const { value } = event.currentTarget.querySelector("input") as HTMLInputElement;
     setName(value);
-    setStatus("close");
   };
   return (
     <form
       noValidate
       autoComplete="off"
       onSubmit={handleSubmit}
-      hidden={status === "close"}
       data-testid="form"
     >
       <TextField
