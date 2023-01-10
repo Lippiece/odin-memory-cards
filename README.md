@@ -1,4 +1,4 @@
-# odin-memory-cards
+# odin-memory-cards (WIP)
 This is my implementation of a memory cards game where you must click all the shown cards once. 
 
 The difficulty is that you have to keep the selected cards in memory because they shuffle with each click. 
