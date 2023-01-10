@@ -4,7 +4,7 @@ const getCards = () =>
   Array.from({ length: 15 }, (_, index) => ({
     clicked: false,
     id     : index + 1,
-    image  : `https://picsum.photos/${getRandomSize(300, 800)}`,
+    image  : `https://picsum.photos/${getRandomSize(300, 800)}?random=${index}}`,
   }));
 
 export default getCards;
