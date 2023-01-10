@@ -14,4 +14,5 @@ export default defineConfig({
   },
   define: { "process.env": {} },
   resolve: { alias: { util: "util/" } },
+  base: "/odin-memory-cards/",
 });
