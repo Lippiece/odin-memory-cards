@@ -13,14 +13,30 @@ describe("App", () => {
     setup();
     expect(screen.getByTestId("app")).toBeDefined();
   });
-  it("renders the main menu", () => {
+});
+
+describe("difficulty", () => {
+  it("changes the cards number when the difficulty is changed", async () => {
     setup();
-    expect(screen.getByTestId("main-menu")).toBeDefined();
+
+    const cards = screen.getByTestId("game-screen");
+    expect(cards.children.length).toBe(5);
+
+    const difficulty = screen.getByDisplayValue("5");
+    userEvent.clear(difficulty);
+    userEvent.click(difficulty);
+    userEvent.type(difficulty, "3");
+    await waitFor(() => {
+      expect(difficulty.value).toBe("3");
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId("game-screen").children.length).toBe(3);
+    });
   });
-  it("renders the GameScreen", () => {
-    setup();
-    expect(screen.getByTestId("game-screen")).toBeDefined();
-  });
+});
+
+describe("scoreboard", () => {
   it("renders the scoreboard", () => {
     setup();
     expect(screen.getByTestId("scoreboard")).toBeDefined();
@@ -81,6 +97,47 @@ describe("App", () => {
       expect(score.textContent).toBe("Score: 0");
     });
   });
+});
+
+describe("main menu", () => {
+  it("renders the main menu", () => {
+    setup();
+    expect(screen.getByTestId("main-menu")).toBeDefined();
+  });
+  it("is shown initially", () => {
+    setup();
+    expect(screen.getByTestId("main-menu").getAttribute("hidden")).toBeFalsy();
+  });
+  it("is hidden when the game starts", async () => {
+    setup();
+    userEvent.click(screen.getByTestId("start-game"));
+    await waitFor(() => {
+      expect(screen.getByTestId("main-menu").getAttribute("hidden")).toBe("");
+    });
+  });
+  it("is shown when the game is over", async () => {
+    setup();
+    userEvent.click(screen.getByTestId("start-game"));
+
+    userEvent.click(screen.getByTestId("card-1"));
+    userEvent.click(screen.getByTestId("card-2"));
+    userEvent.click(screen.getByTestId("card-3"));
+    userEvent.click(screen.getByTestId("card-4"));
+    userEvent.click(screen.getByTestId("card-5"));
+
+    await waitFor(() => {
+      expect(
+        screen.getByTestId("main-menu").getAttribute("hidden"),
+      ).toBeFalsy();
+    });
+  });
+});
+
+describe("game screen", () => {
+  it("renders the GameScreen", () => {
+    setup();
+    expect(screen.getByTestId("game-screen")).toBeDefined();
+  });
 
   it("renders the game over screen when the score is max", async () => {
     setup();
@@ -93,28 +150,6 @@ describe("App", () => {
 
     await waitFor(() => {
       expect(screen.getByTestId("game-screen").getAttribute("hidden")).toBe("");
-    });
-    // await waitFor(() => {
-    //   expect(screen.getByText("Game Over")).toBeDefined();
-    // });
-  });
-
-  it("changes the cards number when the difficulty is changed", async () => {
-    setup();
-
-    const cards = screen.getByTestId("game-screen");
-    expect(cards.children.length).toBe(5);
-
-    const difficulty = screen.getByDisplayValue("5");
-    userEvent.clear(difficulty);
-    userEvent.click(difficulty);
-    userEvent.type(difficulty, "3");
-    await waitFor(() => {
-      expect(difficulty.value).toBe("3");
-    });
-
-    await waitFor(() => {
-      expect(screen.getByTestId("game-screen").children.length).toBe(3);
     });
   });
 });

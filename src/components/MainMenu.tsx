@@ -1,6 +1,5 @@
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
 import TextField from "@mui/material/TextField";
 import { CardsContext, CardsDispatchContext } from "../context/cardsContext";
 import { useCallback, useContext, useState } from "react";
@@ -9,6 +8,8 @@ const MainMenu = () => {
   const data = useContext(CardsContext);
   const dispatch = useContext(CardsDispatchContext);
   const [difficulty, setDifficulty] = useState(data.toShow.length);
+  const { toShow, score } = data;
+  const won = toShow.length === score;
 
   const handleDifficultyChange = useCallback(
     (event: React.ChangeEvent<{ value: string }>) => {
@@ -25,9 +26,10 @@ const MainMenu = () => {
     <div
       className="main-menu"
       data-testid="main-menu"
+      hidden={!won}
     >
       <h1>Main Menu</h1>
-      <Button>Start Game</Button>
+      <Button data-testid="start-game">Start Game</Button>
       <div className="difficulty">
         <FormControl variant="standard">
           <TextField
