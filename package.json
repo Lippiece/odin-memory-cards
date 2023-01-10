@@ -1,8 +1,9 @@
 {
-  "name": "lippeice-vite-react",
+  "name": "odin-memory-cards",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://lippiece.github.io/odin-memory-cards/",
   "scripts": {
     "dev": "vite --port 3000",
     "build": "vite build && cd dist && echo > .nojekyll && cd -",
