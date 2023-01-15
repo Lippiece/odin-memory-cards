@@ -27,7 +27,7 @@ describe("difficulty", () => {
     userEvent.click(difficulty);
     userEvent.type(difficulty, "3");
     await waitFor(() => {
-      expect(difficulty.value).toBe("3");
+      expect(screen.getByDisplayValue("3").value).toBe("3");
     });
 
     await waitFor(() => {
@@ -40,6 +40,17 @@ describe("scoreboard", () => {
   it("renders the scoreboard", () => {
     setup();
     expect(screen.getByTestId("scoreboard")).toBeDefined();
+  });
+
+  it("hides the form after submission", async () => {
+    setup();
+
+    userEvent.type(screen.getByTestId("nameInput"), "John Doe");
+    userEvent.click(screen.getByTestId("submit"));
+
+    await waitFor(() => {
+      expect(screen.queryByTestId("form")?.getAttribute("hidden")).toBeFalsy();
+    });
   });
 
   it("increases the score when a card is clicked", async () => {
@@ -65,6 +76,20 @@ describe("scoreboard", () => {
     userEvent.click(card2);
     await waitFor(() => {
       expect(score.textContent).toBe("Score: 2");
+    });
+  });
+
+  it("Shows time taken to complete the game", async () => {
+    setup();
+    const cards = Array(5)
+      .fill(0)
+      .map((_, index) => screen.getByTestId(`card-${index + 1}`));
+
+    cards.map(card => userEvent.click(card));
+    await waitFor(() => {
+      expect(screen.getByTestId("timings").textContent).toContain(
+        "Time taken to complete the game:"
+      );
     });
   });
 });

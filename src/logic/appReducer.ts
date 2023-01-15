@@ -1,5 +1,5 @@
 import CardType from "../@types/Card";
-import Context from "../@types/Context";
+import { Context } from "../context/cardsContext";
 import getCards from "./getCards";
 import shuffleArray from "./shuffleArray";
 
@@ -9,51 +9,86 @@ interface Action {
 }
 
 const appReducer = (context: Context, action: Action): Context => {
-  const setClicked = (cards: CardType[], cardId: number) =>
-    cards.map(card => (card.id === cardId ? { ...card, clicked: true } : card));
+  const setClicked = () =>
+    context.currentCards.map(card =>
+      card.id === action.payload.id ? { ...card, clicked: true } : card,
+    );
 
-  const handleFirstClick = () => ({
-    ...context,
-    currentCards: shuffleArray(
-      setClicked(context.currentCards, action.payload.id)
-    ),
-    score          : context.score + 1,
-    shownComponents:
-      context.score + 1 === context.currentCards.length
-        ? new Set([ "scoreboard", "main menu" ])
-        : context.shownComponents,
-  });
+  const handleFirstClick = () => {
+    const updatedTimestamps = new Set(
+      [...context.time.cards].map(card => {
+        const timestamp =
+          card.id === action.payload.id
+            ? Date.now() - card.timestamp
+            : card.timestamp;
+        return {
+          id: card.id,
+          timestamp: timestamp,
+        };
+      }),
+    );
+    return {
+      ...context,
+      currentCards: shuffleArray(setClicked()),
+      score: context.score + 1,
+      shownComponents:
+        context.score + 1 === context.currentCards.length
+          ? new Set(["scoreboard", "main menu"])
+          : context.shownComponents,
+      time: {
+        ...context.time,
+        cards: updatedTimestamps,
+      },
+    };
+  };
 
   const endGame = () => ({
     ...context,
-    cards          : getCards(),
-    currentCards   : getCards().slice(0, context.currentCards.length),
-    shownComponents: new Set([ "scoreboard", "main menu" ]),
+    cards: getCards(),
+    currentCards: getCards().slice(0, context.currentCards.length),
+    shownComponents: new Set(["scoreboard", "main menu"]),
+    time: {
+      ...context.time,
+      general: Date.now() - context.time.general,
+    },
   });
 
-  // TODO: reset clicked status on new game
-
-  const setDifficulty = (difficulty: number) => ({
+  const setDifficulty = () => ({
     ...context,
-    currentCards: context.cards.slice(0, difficulty),
-    score       : context.score,
+    currentCards: context.cards.slice(0, action.payload),
+    score: context.score,
   });
 
-  const startGame = () => ({
-    cards          : getCards(),
-    currentCards   : getCards().slice(0, context.currentCards.length),
-    score          : 0,
-    shownComponents: new Set([ "game screen" ]),
-  });
+  const startGame = () => {
+    const cards = getCards();
+    const currentCards = cards.slice(0, context.currentCards.length);
+    const cardsTimestamps = new Set(
+      currentCards.map(card => ({
+        id: card.id,
+        timestamp: Date.now(),
+      })),
+    );
+    return {
+      cards: cards,
+      currentCards: currentCards,
+      score: 0,
+      shownComponents: new Set(["game screen"]),
 
-  const actions = {
-    "clicked first time" : () => handleFirstClick(),
-    "clicked second time": () => endGame(),
-    "set difficulty"     : () => setDifficulty(action.payload),
-    "started game"       : () => startGame(),
+      time: {
+        general: Date.now(),
+        cards: cardsTimestamps,
+      },
+    };
   };
 
-  return actions[ action.type ]?.() || console.error("Unhandled action type");
+  const actions = {
+    "clicked first time": () => handleFirstClick(),
+    "clicked second time": () => endGame(),
+    "set difficulty": () => setDifficulty(),
+    "started game": () => startGame(),
+  };
+
+  return actions[action.type]?.() || console.error("Unhandled action type");
 };
 
 export default appReducer;
