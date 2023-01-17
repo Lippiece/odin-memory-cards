@@ -2,10 +2,11 @@ import CardType from "../@types/Card";
 import { Context } from "../context/cardsContext";
 import getCards from "./getCards";
 import shuffleArray from "./shuffleArray";
+import getTimeDifference from "./getTimeDifference";
 
 interface Action {
   type: string;
-  payload: CardType | number;
+  payload: CardType | number | Date;
 }
 
 const appReducer = (context: Context, action: Action): Context => {
@@ -15,41 +16,38 @@ const appReducer = (context: Context, action: Action): Context => {
     );
 
   const handleFirstClick = () => {
-    const updatedTimestamps = new Set(
-      [...context.time.cards].map(card => {
-        const timestamp =
-          card.id === action.payload.id
-            ? Date.now() - card.timestamp
-            : card.timestamp;
-        return {
-          id: card.id,
-          timestamp: timestamp,
-        };
-      }),
-    );
-    return {
+    const incrementedScore = context.score + 1;
+    const thisCardTimestamp = {
+      id: action.payload.id,
+      timestamp: getTimeDifference(context.time.start, new Date()),
+    };
+    const updatedTimestamps = new Set([
+      ...context.time.cards,
+      thisCardTimestamp,
+    ]);
+    const result = {
       ...context,
       currentCards: shuffleArray(setClicked()),
-      score: context.score + 1,
+      score: incrementedScore,
       shownComponents:
-        context.score + 1 === context.currentCards.length
+        incrementedScore === context.currentCards.length
           ? new Set(["scoreboard", "main menu"])
           : context.shownComponents,
       time: {
         ...context.time,
         cards: updatedTimestamps,
+        difference: getTimeDifference(context.time.start, new Date()),
       },
     };
+    return result;
   };
 
   const endGame = () => ({
     ...context,
-    cards: getCards(),
-    currentCards: getCards().slice(0, context.currentCards.length),
     shownComponents: new Set(["scoreboard", "main menu"]),
     time: {
       ...context.time,
-      general: Date.now() - context.time.general,
+      difference: getTimeDifference(context.time.start, new Date()),
     },
   });
 
@@ -62,21 +60,15 @@ const appReducer = (context: Context, action: Action): Context => {
   const startGame = () => {
     const cards = getCards();
     const currentCards = cards.slice(0, context.currentCards.length);
-    const cardsTimestamps = new Set(
-      currentCards.map(card => ({
-        id: card.id,
-        timestamp: Date.now(),
-      })),
-    );
     return {
+      ...context,
       cards: cards,
       currentCards: currentCards,
       score: 0,
       shownComponents: new Set(["game screen"]),
-
       time: {
-        general: Date.now(),
-        cards: cardsTimestamps,
+        start: new Date(),
+        cards: new Set(),
       },
     };
   };

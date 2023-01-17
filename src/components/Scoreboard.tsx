@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useContext, useState } from "react";
 
-import { CardsContext } from "../context/cardsContext";
+import { CardsContext, Context } from "../context/cardsContext";
 
 const Scoreboard = () => {
   const [ _name, setName ]               = useState<string>("John"); // prettier-ignore
@@ -14,7 +14,10 @@ const Scoreboard = () => {
       hidden={!shownComponents.has("scoreboard")}
     >
       <Form setName={setName} />
-      <Score name={_name} />
+      <Score
+        name={_name}
+        score={score}
+      />
       <Timings time={time} />
     </div>
   );
@@ -55,9 +58,9 @@ const Form = ({ setName }: FormProps) => {
 };
 interface ScoreProps {
   name: string;
+  score: number;
 }
-const Score = ({ name }: ScoreProps) => {
-  const { score } = useContext(CardsContext);
+const Score   = ({ name, score }: ScoreProps) => {
   return (
     <div>
       <h1>Scoreboard</h1>
@@ -66,30 +69,20 @@ const Score = ({ name }: ScoreProps) => {
     </div>
   );
 };
-const Timings = ({
-  time,
-}: {
-  time: {
-    general: number,
-  },
-}) => {
-  const getGeneralTimeTaken = () => {
-    const startTime = new Date("01/01/2020 12:00:00");
-    const endTime   = new Date("01/01/2020 12:30:00");
-
-    const diffMs   = endTime.getTime() - startTime.getTime();
-    const diffMins = Math.floor(diffMs / 60_000);
-    const diffSecs = (diffMs % 60_000) / 1000;
-
-    console.log(`${diffMins}:${diffSecs}`);
-  };
+const Timings = ({ time }: { time: Context["time"] }) => {
   return (
     <div
       className="timings"
       data-testid="timings"
     >
-      <h1>Timings:</h1>
-      <h2>Time taken to complete the game: {getGeneralTimeTaken()}</h2>
+      <h2>Timings:</h2>
+      <h3 data-testid="timeGeneral">{`Time taken to complete the game: ${time.difference}`}</h3>
+      <h3>Times per each card:</h3>
+      <ul>
+        {[ ...time.cards ].map((card, index) => (
+          <li key={index}>{`Card ${index + 1}: ${card.timestamp}`}</li>
+        ))}
+      </ul>
     </div>
   );
 };

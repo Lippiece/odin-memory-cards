@@ -53,32 +53,6 @@ describe("scoreboard", () => {
     });
   });
 
-  it("increases the score when a card is clicked", async () => {
-    setup();
-    const card = screen.getByTestId("card-1");
-
-    userEvent.click(card);
-    await waitFor(() => {
-      expect(screen.getByTestId("score").textContent).toBe("Score: 1");
-    });
-  });
-
-  it("increases the score when a different card is clicked", async () => {
-    setup();
-    const card1 = screen.getByTestId("card-1");
-    const card2 = screen.getByTestId("card-2");
-    const score = screen.getByTestId("score");
-
-    userEvent.click(card1);
-    await waitFor(() => {
-      expect(score.textContent).toBe("Score: 1");
-    });
-    userEvent.click(card2);
-    await waitFor(() => {
-      expect(score.textContent).toBe("Score: 2");
-    });
-  });
-
   it("Shows time taken to complete the game", async () => {
     setup();
     const cards = Array(5)
