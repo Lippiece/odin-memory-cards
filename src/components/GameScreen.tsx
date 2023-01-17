@@ -1,3 +1,5 @@
+import "../css/GameScreen.css";
+
 import { useContext } from "react";
 
 import CardType from "../@types/Card";
@@ -14,8 +16,7 @@ const GameScreen = () => {
       data-testid="game-screen"
       hidden={!shownComponents.has("game screen")}
     >
-      {data.currentCards.map((card: CardType) =>
-(
+      {data.currentCards.map((card: CardType) => (
         <Card
           card={card}
           key={card.id}

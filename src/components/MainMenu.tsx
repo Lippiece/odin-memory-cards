@@ -1,3 +1,5 @@
+import "../css/MainMenu.css";
+
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
@@ -32,12 +34,6 @@ const MainMenu = () => {
       hidden={!shownComponents.has("main menu")}
     >
       <h1>Main Menu</h1>
-      <Button
-        data-testid="start-game"
-        onClick={handleStartClick}
-      >
-        Start Game
-      </Button>
       <div className="difficulty">
         <FormControl variant="standard">
           <TextField
@@ -49,6 +45,12 @@ const MainMenu = () => {
             onChange={handleDifficultyChange}
           />
         </FormControl>
+        <Button
+          data-testid="start-game"
+          onClick={handleStartClick}
+        >
+          Start Game
+        </Button>
       </div>
     </div>
   );
